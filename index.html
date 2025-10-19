@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyprus History Flashcards - Year 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .card-container {
+            perspective: 1000px;
+            margin: 0 auto 30px;
+            max-width: 700px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .card-front {
+            background: white;
+            color: #333;
+        }
+
+        .card-back {
+            background: #4CAF50;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            font-size: 1.4em;
+            line-height: 1.6;
+        }
+
+        .card-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 8px 16px;
+            border: 2px solid white;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .instruction {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .flashcard {
+                height: 350px;
+            }
+            
+            .card-content {
+                font-size: 1.1em;
+            }
+            
+            .card-face {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Cyprus History Flashcards</h1>
+        
+        <div class="progress">
+            Card <span id="current">1</span> of <span id="total">79</span>
+        </div>
+
+        <div class="category-filter">
+            <button class="category-btn active" onclick="filterCategory('all')">All Cards</button>
+            <button class="category-btn" onclick="filterCategory('time')">Historical Time</button>
+            <button class="category-btn" onclick="filterCategory('geology')">Geology</button>
+            <button class="category-btn" onclick="filterCategory('animals')">Animals</button>
+            <button class="category-btn" onclick="filterCategory('humans')">Early Humans</button>
+            <button class="category-btn" onclick="filterCategory('stone')">Stone Age</button>
+            <button class="category-btn" onclick="filterCategory('periods')">Time Periods</button>
+            <button class="category-btn" onclick="filterCategory('methods')">Methods</button>
+        </div>
+
+        <div class="card-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div class="card-label">Question</div>
+                    <div class="card-content" id="question"></div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-label">Answer</div>
+                    <div class="card-content" id="answer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="previousCard()">⬅️ Previous</button>
+            <button class="btn btn-primary" onclick="flipCard()">🔄 Flip Card</button>
+            <button class="btn btn-secondary" onclick="nextCard()">Next ➡️</button>
+            <button class="btn btn-secondary" onclick="shuffleCards()">🔀 Shuffle</button>
+        </div>
+
+        <div class="instruction">
+            💡 Click the card or press SPACE to flip
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            {q: "What is a decade?", a: "A period of 10 years", cat: "time"},
+            {q: "What is a century?", a: "A period of 100 years", cat: "time"},
+            {q: "What is a millennium?", a: "A period of 1000 years", cat: "time"},
+            {q: "What is an Era in historical terms?", a: "A broader historical timeframe defined by significant transformations or milestones (e.g., modern era)", cat: "time"},
+            {q: "What is an Age in historical terms?", a: "Distinct periods within a longer timeframe, often marked by specific characteristics or events (e.g., Bronze Age)", cat: "time"},
+            {q: "What does BC stand for?", a: "Before Christ", cat: "time"},
+            {q: "What does AD stand for?", a: "Anno Domini (Year of our Lord in Latin)", cat: "time"},
+            {q: "What does BCE stand for?", a: "Before Common Era", cat: "time"},
+            {q: "What does CE stand for?", a: "Common Era", cat: "time"},
+            {q: "How do you calculate which century a year belongs to in CE/AD?", a: "Add 1 to the first digits. Example: 1601-1700 = 17th century, 501-600 = 6th century", cat: "time"},
+            {q: "How do you calculate which century a year belongs to in BCE/BC?", a: "Subtract the year from 100 for first century, or subtract first digits from result. Example: 600-501 BCE = 6th century BCE", cat: "time"},
+            {q: "When did the Troodos mountains emerge?", a: "During the Miocene Period, approximately 10 million years ago", cat: "geology"},
+            {q: "What three tectonic plates are important for Cyprus?", a: "1) African Plate, 2) EuroAsian Plate, 3) Arabian Plate", cat: "geology"},
+            {q: "How did Cyprus form?", a: "Tectonic drift between Asian and African plates pushed the seafloor up until it rose out of the water", cat: "geology"},
+            {q: "What is the Messinian Salinity Crisis (MSC)?", a: "Around 6 million years ago, the Mediterranean Sea dried out because the straits of Gibraltar closed, allowing animals to move across from Africa and Arabia", cat: "geology"},
+            {q: "When did the MSC occur?", a: "Approximately 5.96 - 5.93 million years ago", cat: "geology"},
+            {q: "What is the Levant?", a: "A geographical area in the Eastern Mediterranean that includes Cyprus, Syria, Lebanon, Israel, Palestine, and Jordan", cat: "geology"},
+            {q: "What is special about Cyprus for scientists studying geology?", a: "Cyprus is one of the few places where scientists can study the ocean bed without getting wet", cat: "geology"},
+            {q: "What were the first animals in Cyprus?", a: "Pygmy (dwarf) hippopotami and pygmy elephants", cat: "animals"},
+            {q: "When did the first animals arrive in Cyprus?", a: "About 1.5 million years ago (during or after the MSC)", cat: "animals"},
+            {q: "Why were Cyprus's elephants and hippos 'pygmy' or 'dwarf' sized?", a: "They adapted to Cyprus's limited resources by becoming smaller", cat: "animals"},
+            {q: "What is Aetokremnos?", a: "A cave near Limassol meaning 'Cliff of the eagles' containing remains of pygmy hippopotami and elephants, with some of the oldest evidence of human habitation in Cyprus (around 12,000 years ago)", cat: "animals"},
+            {q: "When is the first evidence of human habitation in Cyprus?", a: "Around 12,000 years ago (Mesolithic Age) or possibly 10,000 BC (early Neolithic)", cat: "humans"},
+            {q: "When did the Last Ice Age occur?", a: "115,000 - 11,700 BCE", cat: "humans"},
+            {q: "How might humans have first reached Cyprus?", a: "They may have walked during the Last Ice Age when the Mediterranean Sea was shallower because water was frozen in ice", cat: "humans"},
+            {q: "When was the Lower Paleolithic Age?", a: "200,000 - 60,000 BCE (though earlier dates exist globally)", cat: "humans"},
+            {q: "When was the Upper Paleolithic Age?", a: "18,000 - 12,000 BCE", cat: "humans"},
+            {q: "When was the Mesolithic Age?", a: "12,000 - 8,000 BCE", cat: "humans"},
+            {q: "When was the Neolithic Period in Cyprus?", a: "8800 - 4000 BCE", cat: "periods"},
+            {q: "What does 'aceramic' mean?", a: "Without pottery (absence of ceramic)", cat: "stone"},
+            {q: "When was the aceramic period in Cyprus?", a: "Approximately 10,000 - 5,000 BCE", cat: "stone"},
+            {q: "What is Shoillourokampos-Parekklisia?", a: "The oldest village in Cyprus (8200 - 7500 BCE), used by hunter-gatherers as a seasonal location", cat: "stone"},
+            {q: "What significant discovery was made at Shoillourokampos?", a: "One of the oldest examples of cat domestication in the world - a human and cat buried together around 7500 BCE", cat: "stone"},
+            {q: "What is Khirokitia (Choirokoitia)?", a: "A Neolithic village from around 6000 BCE, one of the oldest permanent settlements in Cyprus", cat: "stone"},
+            {q: "How many people lived in Khirokitia?", a: "About 300 people", cat: "stone"},
+            {q: "What were Khirokitia houses like?", a: "Round, flat-roofed houses built of stones collected from surrounding hills and riverbeds", cat: "stone"},
+            {q: "How was Khirokitia organized?", a: "Houses formed groups around open courtyards - some for cooking/eating, others for sleeping, and some for storage. A stone wall surrounded the village for protection", cat: "stone"},
+            {q: "Where did Neolithic Cypriots bury their dead?", a: "Under the floors of their houses", cat: "stone"},
+            {q: "What did Stone Age Cypriots eat?", a: "Cereal crops, vegetables, fruits (nuts, figs, olives, plums), meat from sheep, goats, pigs, deer, wild boars, and fish", cat: "stone"},
+            {q: "What were Stone Age tools made from?", a: "Stone - used for weapons, tools, plates, cups, and even jewelry", cat: "stone"},
+            {q: "When was the Chalcolithic Period?", a: "4000 - 2300 BCE", cat: "periods"},
+            {q: "When was the Bronze Age?", a: "2300 - 1050 BCE", cat: "periods"},
+            {q: "When was the Geometric Period?", a: "1050 - 750 BCE", cat: "periods"},
+            {q: "When was the Archaic Period?", a: "750 - 475 BCE", cat: "periods"},
+            {q: "When was the Classical Period?", a: "475 - 325 BCE", cat: "periods"},
+            {q: "When was the Hellenistic Period?", a: "325 - 30 BCE", cat: "periods"},
+            {q: "When was the Roman Period?", a: "30 BCE - 395 CE", cat: "periods"},
+            {q: "When was the Byzantine Period?", a: "395 - 1191 CE", cat: "periods"},
+            {q: "When was the Frankish Period?", a: "1192 - 1489 CE", cat: "periods"},
+            {q: "When was the Venetian Period?", a: "1489 - 1571 CE", cat: "periods"},
+            {q: "When was the Ottoman Period?", a: "1571 - 1878 CE", cat: "periods"},
+            {q: "When was the British Period?", a: "1878 - 1960 CE", cat: "periods"},
+            {q: "When did Cyprus gain independence?", a: "1960", cat: "periods"},
+            {q: "Name three ways historians decide historical periods", a: "1) Types of tools (stone, bronze, steel), 2) Types of technology, 3) Types of buildings, 4) Types of art, 5) Social organizations, 6) Religion, 7) Geography and climate, 8) Social transformations", cat: "methods"},
+            {q: "How can archaeologists measure inequality in ancient times?", a: "By comparing house sizes (few big houses vs all small houses) and burial wealth (rich burials with many items vs simple burials)", cat: "methods"},
+            {q: "What did similar house sizes and burials in aceramic Neolithic Cyprus indicate?", a: "Low levels of inequality in society", cat: "methods"},
+            {q: "What determines how long a historical age is?", a: "How fast or how much things change, and the amount of available information", cat: "methods"},
+            {q: "How do scientists date prehistoric objects?", a: "Carbon dating, tree rings, ice cores, and other techniques", cat: "methods"},
+            {q: "What is the Ishango bone?", a: "An ancient mathematical tool dated between 8,000-30,000 years old, with columns that add up to 48 or 60 (multiples of 12)", cat: "methods"},
+            {q: "What are Venus figurines?", a: "Prehistoric female figurines from the Upper Paleolithic, around 30,000-10,000 years ago", cat: "methods"},
+            {q: "When were the ancient wells in Paphos District built?", a: "They are believed to be among the oldest in the world (Neolithic period)", cat: "stone"},
+            {q: "What do ancient wells indicate?", a: "Permanent or semi-permanent settlements and the altering of natural environment", cat: "stone"},
+            {q: "What are the two main mountain ranges in Cyprus?", a: "Troodos Mountains and Kyrenia (Pentadaktylos) Mountains", cat: "geology"},
+            {q: "What is between the two mountain ranges?", a: "The Mesaoria plain", cat: "geology"},
+            {q: "How does geography affect society?", a: "It determines fauna (animals), flora (plants), soil fertility, climate, geology (minerals, earthquakes), access to sea (fishing, trade), and closeness to other lands (invasion risk, trade, culture)", cat: "geology"},
+            {q: "What was Cyprus's environment like in ancient times?", a: "Lush and green, covered in forests, with rivers and streams", cat: "geology"}
+        ];
+
+        let currentIndex = 0;
+        let displayedCards = [...flashcards];
+        let currentFilter = 'all';
+
+        function showCard(index) {
+            const card = displayedCards[index];
+            document.getElementById('question').textContent = card.q;
+            document.getElementById('answer').textContent = card.a;
+            document.getElementById('current').textContent = index + 1;
+            document.getElementById('total').textContent = displayedCards.length;
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % displayedCards.length;
+            showCard(currentIndex);
+        }
+
+        function previousCard() {
+            currentIndex = (currentIndex - 1 + displayedCards.length) % displayedCards.length;
+            showCard(currentIndex);
+        }
+
+        function shuffleCards() {
+            for (let i = displayedCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [displayedCards[i], displayedCards[j]] = [displayedCards[j], displayedCards[i]];
+            }
+            currentIndex = 0;
+            showCard(currentIndex);
+        }
+
+        function filterCategory(category) {
+            currentFilter = category;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (category === 'all') {
+                displayedCards = [...flashcards];
+            } else {
+                displayedCards = flashcards.filter(card => card.cat === category);
+            }
+            currentIndex = 0;
+            showCard(currentIndex);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                flipCard();
+            } else if (e.code === 'ArrowRight') {
+                nextCard();
+            } else if (e.code === 'ArrowLeft') {
+                previousCard();
+            }
+        });
+
+        showCard(0);
+    </script>
+</body>
+</html>
